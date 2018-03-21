@@ -36,9 +36,7 @@ vim MergedPathways2
 :%s/\t/ /g
 ZZ
 
-#You're done, MergedPathways_2 is now in the correct format for further analysis. If you want to clean things up by deleting everything else in the directory use:
-rm -i c* MergedPathways_1
-y
-y
-y
-y
+#Gene sets falling below and above threshold values are removed. In the following only gene sets with 10 to 200 elements are included (remember the pathway names will count towards this hence the +1 below).
+awk'NF>10 && NF<202' MergedPathways_3 > MergedPathways_3
+
+#You're done, MergedPathways_3 is now in the correct format for further analysis.
