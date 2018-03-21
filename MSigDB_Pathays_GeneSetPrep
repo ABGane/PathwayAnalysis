@@ -12,6 +12,8 @@ These are tab delimited files with the following structure where genen represent
 
 Subsequent analysis requires files of form:
     <pathway_name> <gene1> <gene2> ... <genen>
+    
+Two chunks of this script will not work if you just copy and paste it into the bash shell (following the commands vim and rm -i). Lines of code at these points should be entered sequentially.
 
 """
 
