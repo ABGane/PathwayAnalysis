@@ -1,0 +1,98 @@
+"""
+Calculates the Jaccard index for use in comparing gene sets from different sources.
+
+Input: 
+ - Gene sets as .txt files where the first column of each new line gives the pathway name and subsequent whitespace delimited fields for each gene in the set.
+ - Threshold value (x) - pairs of pathways with a Jaccard index that exceed this threshold will be returned.
+Outputs a .txt file where each line is a pair of pathways which when compared exceed the threshold Jaccard index. 
+
+Should run fine on Anaconda (Python 3.6)
+
+"""
+
+#Import required modules
+
+from tkinter import filedialog as fd
+import numpy as np
+import pandas as pd
+import os
+
+#Import data
+
+filepath = fd.askopenfilename(); #Uses tkinter to allow user to define filepath
+
+print("Importing data...")
+
+#Import file specified by filepath as file object f and read lines into content stripping away new line indicators
+with open(filepath) as f:
+    content = f.readlines()
+    content = [x.strip() for x in content]
+
+scontent = []
+pathway_names = []
+slist = []
+
+for i in range(len(content)):
+    scontent.append(content[i].split(" "))
+    
+for i in range(len(content)):
+    pathway_names.append(scontent[i][0])
+
+for i in range(len(content)):
+    slist.append(scontent[i][1:])
+
+print("Calculating Jaccard index matrix...")
+
+#Create an empty list to append results to
+result1 = [] 
+
+#Calculate Jaccard index between every entry
+    #This is computationally inefficient as most computations are performed twice to generate a full results matrix to make mapping easy. Making half a matrix is more complicated but would be possible within the loop. Empty values would still have to be coded for though so in terms of storage of the final results matrix I don't think there should be much difference
+       
+for i in range(len(slist)):
+    for j in range(len(slist)):
+        result1.append(len(set(slist[i]).intersection(slist[j]))/len(set(slist[i]).union(slist[j])))
+
+#Define result matrix dimensions
+shape = (len(slist), len(slist))
+
+#Convert list to array for numpy
+rarray = np.array(result1)  
+
+#Shape array
+rmatrix = rarray.reshape(shape)   
+print("rmatrix computed")
+
+#Create dataframe for query
+
+dataframe = pd.DataFrame(data = rmatrix, columns = pathway_names)
+
+#List all pathways with Jaccard index > x unless PathwayName = PathwayName
+
+hits_dup = []
+
+for k in range(len(slist)):
+    index = dataframe.index[dataframe.iloc[k]>x] #Searches row k for values > x and reports the column index of rows satistying k > 0.5
+    lindex = list(index) #Converts the index to a list for easy handling
+    lindex.remove(k) #removes k from the list (obligate number as each pathway has a Jaccard index of 1 compared to itself and this is not wanted in the output)
+    for l in range(len(lindex)):
+        hits_dup.append(tuple(sorted([pathway_names[k], pathway_names[lindex[l]]])))
+
+hit_set = set(hits_dup)
+hit_set_list = list(hit_set) 
+
+if len(hit_set_list)==0: # Check if list is empty
+    print("No pathways share a Jaccard index greater than " + str(x))
+    print("Run complete. No results saved.")
+else:
+    cwd = os.getcwd()
+
+    print("Writing table...")
+    print("File saving to "+ str(cwd))
+    
+    output_file = input("Specify the output file name:")
+    # e.g. Jaccard_List_Output.txt
+
+with open(output_file, mode="w") as outfile:  
+    for s in hit_set_list:
+        outfile.write("%s\n" % str(s))
