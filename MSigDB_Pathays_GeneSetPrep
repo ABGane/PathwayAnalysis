@@ -1,0 +1,42 @@
+"""
+This gives the bash.exe script used to merge downloads from the Molecular Signatures Database (http://software.broadinstitute.org/gsea/downloads.jsp) for gene set analysis. Files using Entrez IDs to identify genes have been used by the script should also work on the gene symbol files available from the same website.
+
+The following files are downloaded and saved in the directory .../PathwaySets:
+  - BioCarta gene sets, Entrez IDs - 	c2.cp.biocarta.v6.1.entrez.gmt
+  - KEGG gene sets, Entrez IDs -	c2.cp.kegg.v6.1.entrez.gmt
+  - Reactome gene sets, Entrez IDs -	c2.cp.reactome.v6.1.entrez.gmt
+  - all GO gene sets, Entrez IDs -	c5.all.v6.1.entrez.gmt
+  
+These are tab delimited files with the following structure where genen represents the number of genes in each set:
+    <pathway_name>\t<URL>\t<gene1>\t<gene2>\t...\t<genen>
+
+Subsequent analysis requires files of form:
+    <pathway_name> <gene1> <gene2> ... <genen>
+
+"""
+
+# Navigate to the directory /PathwaySets
+
+ls() 
+#Should return filenames c2.cp.biocarta.v6.1.entrez.gmt, c2.cp.kegg.v6.1.entrez.gmt, c2.cp.reactome.v6.1.entrez.gmt, c5.all.v6.1.entrez.gmt. You need to be in the directory with the files in them and some of the following commands assume the directory has nothing in it except these files.
+
+cat * > MergedPathways_1
+# Concatenates all files in the directory and saves the result as a file called MergedPathways_1
+
+#Check the length (number of lines) of MergedPathways1 is equal to the sum of all the component file lengths using:
+wc -l *
+
+#Remove the second column containing <URL>
+cut -f2 --complement MergedPathways_1 > MergedPathways_2
+
+#Change the field delineation from tab to whitespace
+vim MergedPathways2
+:%s/\t/ /g
+ZZ
+
+#You're done, MergedPathways_2 is now in the correct format for further analysis. If you want to clean things up by deleting everything else in the directory use:
+rm -i c* MergedPathways_1
+y
+y
+y
+y
