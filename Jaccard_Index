@@ -96,4 +96,4 @@ with open(output_file, mode="w") as outfile:
     for s in hit_set_list:
         outfile.write("%s\n" % str(s))
     print("File saving to "+ str(cwd))
-    print("Run finished.")
+print("Run finished.")
