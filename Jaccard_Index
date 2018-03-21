@@ -17,9 +17,11 @@ import numpy as np
 import pandas as pd
 import os
 
-#Import data
+#Provide input
 
 filepath = fd.askopenfilename(); #Uses tkinter to allow user to define filepath
+x = float(input("Enter Jaccard index threshold (0 < x < 1):"))
+output_file = input("Specify the output file name:") # e.g. Jaccard_List_Output.txt
 
 print("Importing data...")
 
@@ -70,8 +72,6 @@ dataframe = pd.DataFrame(data = rmatrix, columns = pathway_names)
 
 #List all pathways with Jaccard index > x unless PathwayName = PathwayName
 
-x = float(input("Enter Jaccard index threshold (0 < x < 1):"))
-
 hits_dup = []
 
 for k in range(len(slist)):
@@ -91,9 +91,6 @@ else:
     cwd = os.getcwd()
 
     print("Writing table...")
-    
-    output_file = input("Specify the output file name:")
-    # e.g. Jaccard_List_Output.txt
 
 with open(output_file, mode="w") as outfile:  
     for s in hit_set_list:
