@@ -69,6 +69,7 @@ dataframe = pd.DataFrame(data = rmatrix, columns = pathway_names)
 
 #List all pathways with Jaccard index > x unless PathwayName = PathwayName
 
+x = float(input("Enter Jaccard index threshold (0 < x < 1):"))
 hits_dup = []
 
 for k in range(len(slist)):
