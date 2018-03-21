@@ -37,6 +37,6 @@ vim MergedPathways2
 ZZ
 
 #Gene sets falling below and above threshold values are removed. In the following only gene sets with 10 to 200 elements are included (remember the pathway names will count towards this hence the +1 below).
-awk'NF>10 && NF<202' MergedPathways_3 > MergedPathways_3
+awk'NF>10 && NF<202' MergedPathways_2 > MergedPathways_3
 
 #You're done, MergedPathways_3 is now in the correct format for further analysis.
